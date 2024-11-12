@@ -1,0 +1,22 @@
+spring.application.name=goaltracker
+
+# Configuration de la base de donnÃ©es PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/YOUR_DATABASE
+spring.datasource.username=YOUR_USERNAME
+spring.datasource.password=YOUR_PASSWORD
+spring.datasource.driverClassName=org.postgresql.Driver
+
+# Configuration JPA/Hibernate
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.use_sql_comments=true
+
+# spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+# GraphQL
+spring.graphql.graphiql.enabled=true
+spring.graphql.schema.introspection.enabled=true
+
+
+
