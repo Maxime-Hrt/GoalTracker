@@ -1,5 +1,6 @@
 package com.example.goaltracker.controllers;
 
+ import com.example.goaltracker.security.JwtTokenProvider;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+     @Autowired
+     private JwtTokenProvider jwtTokenProvider;
+
     @PostMapping("/login")
     public Map<String, String> authenticateUser(@RequestBody LoginRequest loginRequest) {
         try {
@@ -32,8 +36,9 @@ public class AuthController {
                     )
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = jwtTokenProvider.generateToken(authentication.getName());
 
-            return Map.of("message", "User authenticated successfully", "status", "200");
+            return Map.of("message", "User authenticated successfully", "status", "200", "token", token);
         } catch (AuthenticationException e) {
             return Map.of("message", "Invalid email/password supplied", "status", "401");
         }

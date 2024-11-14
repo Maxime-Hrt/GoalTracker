@@ -19,5 +19,8 @@ spring.graphql.graphiql.enabled=true
 spring.graphql.schema.introspection.enabled=true
 spring.graphql.path=/api/graphql
 
+# JWT
+app.jwt.secret=YOUR_SECRET
+app.jwt.expiration=86400000
 
 
