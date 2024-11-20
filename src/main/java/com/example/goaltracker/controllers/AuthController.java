@@ -4,7 +4,9 @@ package com.example.goaltracker.controllers;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -27,7 +29,7 @@ public class AuthController {
      private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/login")
-    public Map<String, String> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Map<String, String>> authenticateUser(@RequestBody LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -38,9 +40,20 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtTokenProvider.generateToken(authentication.getName());
 
-            return Map.of("message", "User authenticated successfully", "status", "200", "token", token);
+            Map<String, String> response = Map.of(
+                    "message", "User authenticated successfully",
+                    "status", "200",
+                    "token", token
+            );
+
+            return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
-            return Map.of("message", "Invalid email/password supplied", "status", "401");
+            Map<String, String> response = Map.of(
+                    "message", "Invalid email/password supplied",
+                    "status", "401"
+            );
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
 
