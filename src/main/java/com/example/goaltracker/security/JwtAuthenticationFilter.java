@@ -30,7 +30,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         // Indique que le filtre ne doit pas s'appliquer aux endpoints publics
-        return path.equals("/api/auth/login") || path.equals("/api/graphql") || path.equals("/graphiql");
+        return path.startsWith("/api/auth/refresh-token")
+                || path.startsWith("/api/auth/login")
+                || path.startsWith("/api/auth/validate-token")
+                || path.equals("/api/graphql")
+                || path.equals("/graphiql");
     }
 
 

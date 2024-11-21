@@ -40,21 +40,53 @@ public class JwtTokenProvider {
     }
 
     public String getUsernameFromJWT(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            System.out.println("Token expired while trying to extract username: " + e.getMessage());
+            return e.getClaims().getSubject(); // Retourne le sujet même si le token est expiré
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new JwtException("Invalid or malformed token: " + e.getMessage());
+        }
     }
+
 
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
+        } catch (ExpiredJwtException e) {
+            System.err.println("Token expired" + e.getMessage());
+            return false;
+        } catch (UnsupportedJwtException e) {
+            System.err.println("Unsupported JWT token" + e.getMessage());
+            throw new JwtException("Unsupported JWT token");
+        } catch (MalformedJwtException e) {
+            System.err.println("Malformed JWT token" + e.getMessage());
+            throw new JwtException("Malformed JWT token");
+        } catch (IllegalArgumentException e) {
+            System.err.println("JWT claims string is empty" + e.getMessage());
+            throw new JwtException("JWT claims string is empty");
+        } catch (JwtException e) {
+            System.err.println("JWT token is invalid" + e.getMessage());
+            throw new JwtException("JWT token is invalid");
+        }
+    }
+
+    public boolean canTokenBeRefreshed(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+            return claims.getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
         } catch (JwtException | IllegalArgumentException e) {
-            // Gestion des exceptions JWT ici pour une meilleure clarté des erreurs
-            throw new JwtException("Expired or invalid JWT token");
+            System.err.println("Expired or invalid JWT token");
+            return false;
         }
     }
 }

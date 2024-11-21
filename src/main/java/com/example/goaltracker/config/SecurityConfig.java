@@ -40,7 +40,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/graphql", "/graphiql", "/api/auth/login")
+                        .requestMatchers("/api/graphql", "/graphiql", "/api/auth/*")
                         .permitAll()
                         .anyRequest().authenticated()
                 )
