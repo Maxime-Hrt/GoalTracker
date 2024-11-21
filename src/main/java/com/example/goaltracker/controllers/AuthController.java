@@ -1,19 +1,19 @@
 package com.example.goaltracker.controllers;
 
- import com.example.goaltracker.security.JwtTokenProvider;
-import lombok.Getter;
-import lombok.Setter;
+import com.example.goaltracker.dto.LoginRequestDTO;
+import com.example.goaltracker.dto.TokenRequestDTO;
+import com.example.goaltracker.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.http.HttpStatus;
- import org.springframework.http.ResponseEntity;
- import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
- import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*;
 
- import java.util.Map;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,11 +22,11 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-     @Autowired
-     private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Map<String, String>> authenticateUser(@RequestBody LoginRequestDTO loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -83,7 +83,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<Map<String, String>> refreshToken(@RequestBody TokenRequest tokenRequest) {
+    public ResponseEntity<Map<String, String>> refreshToken(@RequestBody TokenRequestDTO tokenRequest) {
         try {
             String oldToken = tokenRequest.getToken();
             if (jwtTokenProvider.validateToken(oldToken)) {
@@ -117,18 +117,5 @@ public class AuthController {
             );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-    }
-
-    @Getter
-    @Setter
-    public static class LoginRequest {
-        private String email;
-        private String password;
-    }
-
-    @Getter
-    @Setter
-    public static class TokenRequest {
-        private String token;
     }
 }

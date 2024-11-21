@@ -21,7 +21,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder) { // Ajout de @Lazy ici
+    public UserService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder) { // @Lazy pour éviter une dépendance circulaire
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
