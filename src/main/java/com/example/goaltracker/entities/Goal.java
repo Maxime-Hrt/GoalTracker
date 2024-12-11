@@ -32,6 +32,9 @@ public class Goal {
     @Column(nullable = false)
     private LocalDateTime targetDate;
 
+    @Enumerated(EnumType.STRING)
+    private Color color;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

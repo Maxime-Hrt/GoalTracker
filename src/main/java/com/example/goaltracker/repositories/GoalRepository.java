@@ -7,5 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GoalRepository extends JpaRepository<Goal, Long> {
-    Optional<List<Goal>> findByUserId(Long userId);
+    List<Goal> findByUserId(Long userId);
+    Optional<Goal> findByIdAndUserId(Long id, Long userId);
 }

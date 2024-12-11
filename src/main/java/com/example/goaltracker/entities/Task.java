@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "task")
@@ -17,28 +17,22 @@ public class Task {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
     @Column(nullable = false)
-    private String description;
+    private boolean isCompleted;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TaskStatus status;
+    private LocalDateTime createdDate;
 
     @ManyToOne
     @JoinColumn(name = "goal_id", nullable = false)
     private Goal goal;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dueDate;
-
-    public Task(String name, String description, TaskStatus status, Goal goal, Date dueDate) {
-        this.name = name;
-        this.description = description;
-        this.status = status;
+    public Task(String title, boolean isCompleted, LocalDateTime createdDate, Goal goal) {
+        this.title = title;
+        this.isCompleted = isCompleted;
+        this.createdDate = createdDate;
         this.goal = goal;
-        this.dueDate = dueDate;
     }
 }
