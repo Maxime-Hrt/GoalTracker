@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +51,31 @@ public class UserService implements UserDetailsService {
 
     public Optional<User> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public String generateToken(String username, String password) {
+        if (username == null || password == null) {
+            return null;
+        }
+        return passwordEncoder.encode(username + password);
+    }
+
+    public boolean checkPassword(String email, String password) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            System.out.println("User not found: " + email);
+            return false;
+        }
+        boolean matches = passwordEncoder.matches(password, user.get().getPassword());
+        System.out.println("Password check for " + email + ": " + matches);
+        return matches;
     }
 }

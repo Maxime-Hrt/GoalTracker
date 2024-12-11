@@ -38,3 +38,6 @@ out/
 
 ### PROPERTY FILES ###
 /src/main/resources/application.properties
+
+### TEST ENDPOINTS FILES ###
+/src/main/java/com/example/goaltracker/http/
