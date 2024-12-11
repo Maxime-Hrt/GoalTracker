@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "goal")
@@ -38,6 +39,9 @@ public class Goal {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks;
 
     public Goal(String title, String description, GoalStatus status, LocalDateTime createdDate, LocalDateTime targetDate, User user) {
         this.title = title;
