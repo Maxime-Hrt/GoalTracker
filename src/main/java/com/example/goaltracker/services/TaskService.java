@@ -1,5 +1,6 @@
 package com.example.goaltracker.services;
 
+import com.example.goaltracker.dto.GoalAndTaskDTO;
 import com.example.goaltracker.dto.TaskDTO;
 import com.example.goaltracker.entities.Goal;
 import com.example.goaltracker.entities.Task;
@@ -46,6 +47,11 @@ public class TaskService {
 
     public Optional<Task> getTaskById(Long taskId) {
         return taskRepository.findById(taskId);
+    }
+
+    public List<Task> getTasksByUserId(Long userId) {
+        List<Goal> goals = goalRepository.findByUserId(userId);
+        return taskRepository.findByGoalIdIn(goals.stream().map(Goal::getId).toList());
     }
 
     public Task updateTask(Long taskId, TaskDTO taskDTO) {

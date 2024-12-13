@@ -70,6 +70,20 @@ public class TaskController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TaskResponseDTO>> getTasksByUserId(@PathVariable Long userId) {
+        List<TaskResponseDTO> tasks = taskService.getTasksByUserId(userId).stream()
+                .map(task -> new TaskResponseDTO(
+                        task.getId(),
+                        task.getTitle(),
+                        task.isCompleted(),
+                        task.getCreatedDate(),
+                        task.getGoal().getId()
+                ))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
+
     @PutMapping("/{taskId}")
     public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long taskId, @RequestBody TaskDTO taskDTO) {
         Task task = taskService.updateTask(taskId, taskDTO);
